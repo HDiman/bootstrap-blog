@@ -1,12 +1,37 @@
-from flask import Flask, render_template
+# import necessary packages
 
-app = Flask(__name__)
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import smtplib
+
+# create message object instance
+msg = MIMEMultipart()
 
 
-@app.route("/")
-def home():
-    return render_template("index.html")
+message = "Thank you"
+
+# setup the parameters of the message
+password = " "
+msg['From'] = "split777hisense@gmail.com"
+msg['To'] = "dsannikov@me.com"
+msg['Subject'] = "Subscription"
+
+# add in the message body
+msg.attach(MIMEText(message, 'plain'))
+
+#create server
+server = smtplib.SMTP('smtp.gmail.com: 587')
+
+server.starttls()
+
+# Login Credentials for sending the mail
+server.login(msg['From'], password)
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# send the message via the server.
+server.sendmail(msg['From'], msg['To'], msg.as_string())
+
+server.quit()
+
+print("successfully sent email to %s:" % (msg['To']))
+
